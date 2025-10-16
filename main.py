@@ -1,19 +1,31 @@
 """Демо модуль для курса"""
-from datetime import date
 
 
-class Book:
-    """Книга"""
+class User:
+    """Пользователь"""
+    users = []
 
-    def __init__(self, title: str, year: int):
-        self.title = title
-        self.year = year
+    def __init__(self, name: str, age: int):
+        self.name = name
+        self.age = age
+        User.users.append(self)
 
-    @staticmethod
-    def years_since(year: int) -> int:
-        """Метод получения возвраста"""
-        return date.today().year - year
+    @classmethod
+    def from_string(cls, data: str):
+        """Альтернативное создание"""
+        name, age = data.split(",")
+        return cls(name, int(age))
+
+    @classmethod
+    def total_users(cls):
+        """Число пользователей"""
+        return len(cls.users)
 
 
-book = Book("Властелин колец", 1985)
-print(Book.years_since(book.year))
+vasia = User("Вася", 18)
+kate = User("Катя", 20)
+print(User.total_users())
+
+maxim = User.from_string("Макс,40")
+print(maxim.name)
+print(maxim.age)
