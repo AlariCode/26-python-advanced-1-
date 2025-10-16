@@ -1,21 +1,19 @@
 """Демо модуль для курса"""
 
 
-class Task:
-    """Задача"""
-    done: bool = False
-    title: str
+class Auth:
+    is_authed: bool = False
 
-    def set_info(self, text: str):
-        """Установка title"""
-        self.title = text
+    def login(self):
+        self.is_authed = True
 
-    def get_info(self):
-        """Получение данных задачи"""
-        return self.title
+    def logout(self):
+        """Выход"""
+        self.is_authed = False
 
 
-task = Task()
-task.set_info("Сделать лекцию")
-
-print(task.get_info())
+auth_service = Auth()
+auth_service.login()
+auth_service.logout()
+# Auth.login(auth_service)
+print(auth_service.is_authed)
