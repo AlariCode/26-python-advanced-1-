@@ -1,19 +1,14 @@
 """Демо модуль для курса"""
 
 
-class Auth:
-    is_authed: bool = False
+class Note:
+    """Заметка"""
 
-    def login(self):
-        self.is_authed = True
-
-    def logout(self):
-        """Выход"""
-        self.is_authed = False
+    def __init__(self, title: str, description: str = ""):
+        self.title = title
+        self.description = description
 
 
-auth_service = Auth()
-auth_service.login()
-auth_service.logout()
-# Auth.login(auth_service)
-print(auth_service.is_authed)
+note = Note("Заметка", "Это моя заметка")
+print(note.description)
+note_next = Note("Моя заметка")
