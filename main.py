@@ -1,23 +1,27 @@
 """Демо модуль для курса"""
 
 
-class User:
-    """Пользователь системы"""
-    email: str
-    name: str
-    age: int = 39
+class Car:
+    """Машина"""
+    make: str
+    model: str
+    year: int
+    vehicle_type: str = "Легковой"
 
 
-print(type(User))
+audi = Car()
+audi.make = "Audi"
+print(audi.vehicle_type)
+audi.vehicle_type = "Лодки"
+Car.vehicle_type = "Грузовой"
+print(audi.vehicle_type)
 
-userMaria = User()
-print(userMaria)
 
-userAnton = User()
-print(userAnton)
+class Boat:
+    """Лодки"""
+    year: int
 
-userAnton.email = "a@a.ru"
-userAnton.name = "Антон"
 
-print(userAnton.email)
-print(userAnton.age)
+boat1 = Boat()
+boat1.year = 2025
+print(boat1.year)
