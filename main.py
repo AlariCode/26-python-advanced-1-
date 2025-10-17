@@ -1,32 +1,23 @@
 """Демо модуль для курса"""
 
-
-class ShoppingList:
-    """Список покупок"""
-
-    def __init__(self, items: list[str]):
-        self.items: list[str] = items
-
-    def __eq__(self, value: object) -> bool:
-        if not isinstance(value, ShoppingList):
-            return False
-        return self.items == value.items
-
-    def __len__(self):
-        return len(self.items)
-
-    def __getitem__(self, index):
-        return self.items[index]
-
-    def __repr__(self) -> str:
-        return f"ShoppingList(items={",".join(self.items)})"
+from dataclasses import dataclass, field
+from datetime import datetime
 
 
-list_1 = ShoppingList(["Яблоко"])
-list_2 = ShoppingList(["Помидор"])
+@dataclass(order=True)
+class Task:
+    title: str
+    secret_key: str = field(repr=False, compare=False)
+    priority: int = 3
+    done: bool = False
+    created_at: datetime | None = None
 
-print(len(list_1))
-print(list_1[0])
+    def __post_init__(self):
+        if self.created_at is None:
+            self.created_at = datetime.now()
 
-print(list_1 == list_2)
-print(list_2)
+
+task_1 = Task("Сделать лекцию", "mysecret")
+task_2 = Task("Сделать лекцию", "mysecret")
+print(task_1 == task_2)
+print(task_1)
