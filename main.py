@@ -1,17 +1,19 @@
 """Демо модуль для курса"""
 
 
-def log_decorator(func):
-    def wrapper():
-        print("Функция началась")
-        func()
-        print("Функция завершилась")
+def log(func):
+    """Функция логирования"""
+    def wrapper(*args, **kwargs):
+        print(f"Вызов {func.__name__} с аргументами {args} {kwargs}")
+        result = func(*args, **kwargs)
+        print("Готово!")
+        return result
     return wrapper
 
 
-@log_decorator
-def say_hello():
-    print("Привет!")
+@log
+def add(a: float, b: float) -> float:
+    return a + b
 
 
-say_hello()
+print(add(3, 5))
