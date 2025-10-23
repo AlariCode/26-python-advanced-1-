@@ -2,30 +2,31 @@
 
 
 class User:
-    def __init__(self, name: str, balance: float) -> None:
+    """Пользователь платформы"""
+
+    def __init__(self, name: str, email: str):
         self.name = name
-        self.__balance = balance
+        self.email = email
 
-    def get_balance(self):
-        return self.__balance
-
-    def deposit(self, amount: float):
-        if amount > 0:
-            self.__balance += amount
-        else:
-            raise ValueError("Сумма должна быть положительной")
-
-    def withdraw(self, amount: float):
-        if 0 < amount <= self.__balance:
-            self.__balance -= amount
-        else:
-            raise ValueError("Недостаточно средств")
+    def get_info(self):
+        return f"{self.name}, {self.email}"
 
 
-u = User("Антон", 1000)
-u.deposit(500)
-print(u.get_balance())
-u.withdraw(700)
-print(u.get_balance())
-print(u.__dict__)
-print(u.get_balance())
+class Student(User):
+    """Студент платформы"""
+
+    def watch_video(self):
+        print("Смотрю")
+
+
+class Mentor(User):
+    """Преподаватель платформы"""
+
+    def check_homework(self):
+        print("Проверяю")
+
+
+student = Student("Вася", "a@a.ru")
+print(student.get_info())
+print(student.email)
+print(student.watch_video())
