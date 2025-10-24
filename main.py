@@ -1,22 +1,29 @@
 """Демо модуль для курса"""
 
 
+class Player:
+    pass
+
+
 class Light:
     def turn_on(self):
         print("Свет включён")
 
 
-class Music:
-    def play(self):
+class Music(Player):
+    def turn_on(self):
         print("Музыка включена")
 
 
-class SmartHome(Light, Music):
+class SmartHome(Music, Light):
+    def play(self):
+        print("Альтернативный play")
+
     def start(self):
         print("Умный дом активен")
         self.turn_on()
-        self.play()
 
 
 home = SmartHome()
 home.start()
+print(SmartHome.mro())
