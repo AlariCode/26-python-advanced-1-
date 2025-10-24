@@ -1,32 +1,22 @@
 """Демо модуль для курса"""
 
 
-class User:
-    """Пользователь платформы"""
-
-    def __init__(self, name: str, email: str):
-        self.name = name
-        self.email = email
-
-    def get_info(self):
-        return f"{self.name}, {self.email}"
+class Light:
+    def turn_on(self):
+        print("Свет включён")
 
 
-class Student(User):
-    """Студент платформы"""
-
-    def watch_video(self):
-        print("Смотрю")
+class Music:
+    def play(self):
+        print("Музыка включена")
 
 
-class Mentor(User):
-    """Преподаватель платформы"""
+class SmartHome(Light, Music):
+    def start(self):
+        print("Умный дом активен")
+        self.turn_on()
+        self.play()
 
-    def check_homework(self):
-        print("Проверяю")
 
-
-student = Student("Вася", "a@a.ru")
-print(student.get_info())
-print(student.email)
-print(student.watch_video())
+home = SmartHome()
+home.start()
