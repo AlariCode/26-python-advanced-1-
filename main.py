@@ -1,30 +1,24 @@
 """Демо модуль для курса"""
 
-len("Purple")
-len([1, 2, 3])
-len({1: "a", 2: "b"})
+# Notification - ...
+# EmailNotification - отправка через email
 
 
-class Payment:
-    def pay(self, amount):
-        raise NotImplementedError("Метод должен быть определён")
+class Notification:
+    def __init__(self, sender):
+        self.sender = sender
+
+    def send(self, message):
+        self.sender.send(message)
+
+    def get_ack(self):
+        pass
 
 
-class CardPayment(Payment):
-    def pay(self, amount):
-        print(f"Оплата картой: {amount}")
+class EmailSender:
+    def send(self, message):
+        print(f"Отправлно сообщение {message}")
 
 
-class CryptoPayment(Payment):
-    def pay(self, amount):
-        print(f"Оплата криптой: {amount}")
-
-
-class ApplePayment(Payment):
-    def pay(self, amount):
-        print(f"Оплата apple: {amount}")
-
-
-payments = [CardPayment(), CryptoPayment(), ApplePayment()]
-for p in payments:
-    p.pay(100)
+notification = Notification(EmailSender())
+notification.send("Сообщение")
