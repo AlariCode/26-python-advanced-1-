@@ -6,6 +6,13 @@
 # Order - list[Item] и политика скидок, метод расчёта total total_with_discount и set_policy
 
 from dataclasses import dataclass
+from typing import Protocol
+
+
+class DiscountPolicy(Protocol):
+    """Протокол скидок"""
+
+    def discount(self, total: float) -> float: ...
 
 
 @dataclass
@@ -36,12 +43,11 @@ class PercentageDiscount:
         return total * (self.percent / 100)
 
 
+@dataclass
 class Order:
     """Заказ"""
-
-    def __init__(self, items: list[Item], policy) -> None:
-        self.items = items
-        self.policy = policy
+    items: list[Item]
+    policy: DiscountPolicy
 
     def total(self):
         return sum(i.subtotal() for i in self.items)
