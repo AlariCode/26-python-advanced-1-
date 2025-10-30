@@ -1,69 +1,50 @@
 """Демо модуль для курса"""
 
-# Заказ в интернет магазине
-# Item - name, price, qty и метод subtotal() -> считает цену
-# Политики скидок - NoDiscount - без скидки, PercentageDiscount - процент от заказа
-# Order - list[Item] и политика скидок, метод расчёта total total_with_discount и set_policy
+# Хранилище
+# Нужно реалозовать MemoryStorage и FileStorage с методами load и save
+# Приложение чистает строку и передаёт в use_storage, сохарняет в одном из storage
+# После успешного сохранения читает storage и выводит сохранённые данные
 
-from dataclasses import dataclass
 from typing import Protocol
 
 
-class DiscountPolicy(Protocol):
-    """Протокол скидок"""
+class Storage(Protocol):
+    """Протокол хранения"""
 
-    def discount(self, total: float) -> float: ...
-
-
-@dataclass
-class Item:
-    """Единица товара"""
-    name: str
-    price: float
-    qty: int = 1
-
-    def subtotal(self) -> float:
-        """Расчёт суммы"""
-        return self.price * self.qty
+    def save(self, data: str) -> None: ...
+    def load(self) -> str: ...
 
 
-class NoDiscount:
-    """Политика без скидки"""
+class MemoryStorage:
+    """Хранение в памяти"""
 
-    def discount(self, total: float) -> float:
-        return 0
+    def save(self, data: str) -> None:
+        self.data = data
 
-
-@dataclass
-class PercentageDiscount:
-    """Политика с % скидки"""
-    percent: float
-
-    def discount(self, total: float) -> float:
-        return total * (self.percent / 100)
+    def load(self) -> str:
+        return getattr(self, "data", "")
 
 
-@dataclass
-class Order:
-    """Заказ"""
-    items: list[Item]
-    policy: DiscountPolicy
+class FileStorage:
+    """Хранение в файле"""
 
-    def total(self):
-        return sum(i.subtotal() for i in self.items)
+    def save(self, data: str) -> None:
+        with open("data.txt", "w", encoding="utf-8") as f:
+            f.write(data)
 
-    def total_with_discount(self):
-        t = self.total()
-        return t - self.policy.discount(t)
-
-    def set_policy(self, policy):
-        self.policy = policy
+    def load(self) -> str:
+        with open("data.txt", "r", encoding="utf-8") as f:
+            return f.read()
 
 
-basket = [Item("Бумага", 100, 5), Item("Ершик", 1000, 1),]
-order = Order(basket, NoDiscount())
-print(order.total())
-print(order.total_with_discount())
-order.set_policy(PercentageDiscount(10))
-print(order.total())
-print(order.total_with_discount())
+def use_storage(storage: Storage, data: str):
+    storage.save(data)
+    return storage.load()
+
+
+mem = MemoryStorage()
+file = FileStorage()
+
+user_input = input("Введите данные: ")
+print(use_storage(mem, user_input))
+print(use_storage(file, user_input))
