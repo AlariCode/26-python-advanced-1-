@@ -1,68 +1,56 @@
 """Демо модуль для курса"""
 
-# Управление студентами
-# У нас есть студенты с именами и оценками
-# Нужно сделать возможность:
-# - добавить студента в список
-# - получить список студентов
-# - получить среднюю оценку
-# - получить лучшего студента
-# - распечатать отчёт - средний бал и лучший студент
+# Принцип открытости и закрытости
+# Классы должны быть открыты для расширения, но закрыты для модификации.
 
+
+# class DiscountCalculator:
+#     def calculate(self, user_type: str, amount: float) -> float:
+#         if user_type == "student":
+#             return amount * 0.9
+#         elif user_type == "vip":
+#             return amount * 0.8
+#         else:
+#             return amount
+
+
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
-@dataclass
-class Student:
-    name: str
-    score: int
+class DiscountPolicy(ABC):
+    @abstractmethod
+    def apply_discount(self, amount: float) -> float:
+        pass
+
+
+class NoDiscount(DiscountPolicy):
+    def apply_discount(self, amount: float) -> float:
+        return amount
+
+
+class StudentDiscount(DiscountPolicy):
+    def apply_discount(self, amount: float) -> float:
+        return amount * 0.9
+
+
+class VipDiscount(DiscountPolicy):
+    def apply_discount(self, amount: float) -> float:
+        return amount * 0.8
+
+
+class GuestDiscount(DiscountPolicy):
+    def apply_discount(self, amount: float) -> float:
+        return amount * 0.95
 
 
 @dataclass
-class StudentRepository:
-    students: list[Student]
+class DiscountCalculator:
+    policy: DiscountPolicy
 
-    def add(self, student: Student):
-        self.students.append(student)
-
-    def list_all(self) -> list[Student]:
-        return self.students
+    def calculate(self, amount: float) -> float:
+        return self.policy.apply_discount(amount)
 
 
-@dataclass
-class StatisticService:
-    repository: StudentRepository
-
-    def get_avarage_score(self) -> float:
-        students = self.repository.list_all()
-        if not students:
-            return 0
-        total = sum(s.score for s in students)
-        return total / len(students)
-
-    def get_best_student(self) -> Student:
-        students = self.repository.list_all()
-        return max(students, key=lambda s: s.score)
-
-
-@dataclass
-class ReportPrinter:
-    repository: StudentRepository
-    stat_service: StatisticService
-
-    def print_report(self):
-        print("Отчёт по студентам")
-        for s in self.repository.list_all():
-            print(f"{s.name}: {s.score}")
-        print(f"Средний балл: {self.stat_service.get_avarage_score()}")
-        best = self.stat_service.get_best_student()
-        print(f"Лучший студент: {best.name}")
-
-
-repo = StudentRepository([Student("Вася", 50)])
-stat_service = StatisticService(repo)
-printer = ReportPrinter(repo, stat_service)
-repo.add(Student("Аня", 100))
-repo.add(Student("Катя", 80))
-
-printer.print_report()
+calc = DiscountCalculator(GuestDiscount())
+print(calc.calculate(1000))
