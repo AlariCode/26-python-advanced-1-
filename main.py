@@ -4,59 +4,61 @@
 # Не заставляй классы реализовывать методы, которые им не нужны.
 
 
-# class Printer:
-#     def print_doc(self, doc: str):
+# class PaymentProcessor:
+#     def pay(self, amount: float):
 #         pass
 
-#     def scan_doc(self, doc: str):
+#     def refund(self, amount: float):
 #         pass
 
-#     def fax_doc(self, doc: str):
+#     def tokenize_card(self, card_number: str):
 #         pass
 
-
-# class OldPrinter(Printer):
-#     def print_doc(self, doc: str):
-#         print(doc)
-
-#     def scan_doc(self, doc: str):
-#         raise NotImplementedError("Не могу")
-
-#     def fax_doc(self, doc: str):
-#         raise NotImplementedError("Не могу")
+#     def check_balance(self):
+#         pass
 
 from abc import ABC, abstractmethod
 
 
-class Printable(ABC):
+class Payable(ABC):
     @abstractmethod
-    def print_doc(self, doc: str):
+    def pay(self, amount: float):
         pass
 
-
-class Scannable(ABC):
     @abstractmethod
-    def scan_doc(self, doc: str):
+    def refund(self, amount: float):
         pass
 
 
-class Faxable(ABC):
+class Tokenazable(ABC):
     @abstractmethod
-    def fax_doc(self, doc: str):
+    def tokenize_card(self, card_number: str):
         pass
 
 
-class ModernPrinter(Printable, Scannable, Faxable):
-    def print_doc(self, doc: str):
-        pass
-
-    def scan_doc(self, doc: str):
-        pass
-
-    def fax_doc(self, doc: str):
+class BalanceCheckable(ABC):
+    @abstractmethod
+    def check_balance(self):
         pass
 
 
-class OldPrinter(Printable):
-    def print_doc(self, doc: str):
+class Card(Payable, Tokenazable):
+    def pay(self, amount: float):
+        pass
+
+    def refund(self, amount: float):
+        pass
+
+    def tokenize_card(self, card_number: str):
+        pass
+
+
+class Paypal(Payable, BalanceCheckable):
+    def pay(self, amount: float):
+        pass
+
+    def refund(self, amount: float):
+        pass
+
+    def check_balance(self):
         pass
