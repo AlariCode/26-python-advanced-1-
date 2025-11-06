@@ -1,41 +1,43 @@
 """Демо модуль для курса"""
 
-# Объекты дочерних классов должны быть взаимозаменяемы
-# с объектами своих базовых классов.
+# Создать 3 метода платежи:
+# - Всё сумму
+# - Всё сумму - число бонусов
+# - Деление на N частей, 1 сразу, остальные потом
 
-# Если где-то в коде используется базовый класс,
-# то можно подставить любой его наследник —
-# и программа должна работать корректно, не ломаясь и не меняя поведение.
 
 from dataclasses import dataclass
 
 
+class Payment:
+    def pay(self, amount: float) -> float:
+        """Метод, который возвращает текущую сумму для списания"""
+        print(f"Списано: {amount}")
+        return amount
+
+
 @dataclass
-class User:
-    name: str
-    bonus: int = 0
+class BonusPayment(Payment):
+    bonuses: float
 
-    def add_bounus(self, amount: int):
-        self.bonus += amount
-        print(f"{self.name} получил {amount}. Всего {self.bonus}")
-
-
-class PremiumUser(User):
-    def add_bounus(self, amount: int):
-        self.bonus += amount * 2
-        print(f"{self.name} получил {amount}. Всего {self.bonus}")
+    def pay(self, amount: float) -> float:
+        final = amount - self.bonuses
+        print(f"Списано: {final}")
+        return final
 
 
-class BannedUser(User):
-    def add_bounus(self, amount: int):
-        # raise Exception("Пользователь забанен")
-        print(f"{self.name} не может получить бонусы")
+@dataclass
+class InstallmentPayment(Payment):
+    part: int
+
+    def pay(self, amount: float) -> float:
+        final = amount / self.part
+        print(f"Списано: {final}")
+        return final
 
 
-def reward_user(user: User):
-    user.add_bounus(100)
+def pay(method: Payment):
+    return method.pay(100)
 
 
-reward_user(User("Вася"))
-reward_user(PremiumUser("Вася"))
-reward_user(BannedUser("Вася"))
+pay(InstallmentPayment(2))
