@@ -1,64 +1,41 @@
 """Демо модуль для курса"""
 
-# Клиенты не должны зависеть от методов, которые они не используют.
-# Не заставляй классы реализовывать методы, которые им не нужны.
+# DIP
 
+# Модули верхних уровней не должны зависеть от модулей нижних уровней.
 
-# class PaymentProcessor:
-#     def pay(self, amount: float):
-#         pass
+# Оба типа модулей должны зависеть от абстракций.
 
-#     def refund(self, amount: float):
-#         pass
+# Абстракции не должны зависеть от деталей.
 
-#     def tokenize_card(self, card_number: str):
-#         pass
-
-#     def check_balance(self):
-#         pass
+# Детали должны зависеть от абстракций.
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 
-class Payable(ABC):
+class Logger(ABC):
     @abstractmethod
-    def pay(self, amount: float):
-        pass
-
-    @abstractmethod
-    def refund(self, amount: float):
-        pass
+    def log(self, message: str): ...
 
 
-class Tokenazable(ABC):
-    @abstractmethod
-    def tokenize_card(self, card_number: str):
-        pass
+class FileLogger(Logger):
+    def log(self, message: str):
+        print(f"Запись в файл: {message}")
 
 
-class BalanceCheckable(ABC):
-    @abstractmethod
-    def check_balance(self):
-        pass
+class ConsoleLogger(Logger):
+    def log(self, message: str):
+        print(f"Запись в консоль: {message}")
 
 
-class Card(Payable, Tokenazable):
-    def pay(self, amount: float):
-        pass
+@dataclass
+class UserService:
+    logger: Logger
 
-    def refund(self, amount: float):
-        pass
-
-    def tokenize_card(self, card_number: str):
-        pass
+    def create_user(self, name: str):
+        # Создаёт пользователя
+        self.logger.log(f"Создан аккаунт {name}")
 
 
-class Paypal(Payable, BalanceCheckable):
-    def pay(self, amount: float):
-        pass
-
-    def refund(self, amount: float):
-        pass
-
-    def check_balance(self):
-        pass
+service = UserService(ConsoleLogger())
