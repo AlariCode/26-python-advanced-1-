@@ -1,41 +1,45 @@
 """Демо модуль для курса"""
 
-# DIP
+# Сделать LowStockService который в методе run проверяет в
+# InMemoryStockRepository - сколько осталось товара (число items)
+# и если их меньше 10 - отправляется уведомление через EmailNotifier
 
-# Модули верхних уровней не должны зависеть от модулей нижних уровней.
-
-# Оба типа модулей должны зависеть от абстракций.
-
-# Абстракции не должны зависеть от деталей.
-
-# Детали должны зависеть от абстракций.
-
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Protocol
 
 
-class Logger(ABC):
-    @abstractmethod
-    def log(self, message: str): ...
+class StockRepository(Protocol):
+    def get_stock_count(self) -> int: ...
 
 
-class FileLogger(Logger):
-    def log(self, message: str):
-        print(f"Запись в файл: {message}")
-
-
-class ConsoleLogger(Logger):
-    def log(self, message: str):
-        print(f"Запись в консоль: {message}")
+class Notifier(Protocol):
+    def notify(self, message: str): ...
 
 
 @dataclass
-class UserService:
-    logger: Logger
+class InMemoryStockRepository:
+    items_count: int
 
-    def create_user(self, name: str):
-        # Создаёт пользователя
-        self.logger.log(f"Создан аккаунт {name}")
+    def get_stock_count(self) -> int:
+        return self.items_count
 
 
-service = UserService(ConsoleLogger())
+class EmailNotifier:
+    def notify(self, message: str):
+        print(f"email - {message}")
+
+
+@dataclass
+class LowStockService:
+    repository: StockRepository
+    notifier: Notifier
+
+    def run(self):
+        if self.repository.get_stock_count() <= 10:
+            self.notifier.notify("Мало товара")
+        else:
+            print("Проверка пройдена")
+
+
+service = LowStockService(InMemoryStockRepository(12), EmailNotifier())
+service.run()
