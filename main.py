@@ -1,10 +1,15 @@
 
-import gc
+from typing import TypeVar
 
 
-a = []
-b = [a]
-a.append(b)
+T = TypeVar("T")
 
-print(gc.get_stats())
-gc.collect()
+
+def first_item(items: list[T]) -> T:
+    return items[0]
+
+
+users = ["Anton", "Vasia"]
+num = [1, 2, 3]
+
+res = first_item(users)
