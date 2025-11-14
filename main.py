@@ -1,24 +1,28 @@
+# Сделать функции
+# safe_get - безопасное получение элемента по индексу
+# map_optional - Применяет функцию к значению, если оно не None
+# or_else - Возвращает значение или default если None
 
-from dataclasses import dataclass
-from typing import Optional
-
-
-@dataclass
-class User:
-    id: int
-    name: str
-    email: str
+from typing import TypeVar, Optional, Callable
 
 
-def get_user_by_id(user_id: int) -> Optional[User]:
-    users = [
-        User(1, "Anton", "a@a.ru"),
-        User(2, "Vasia", "v@v.ru")
-    ]
-    for user in users:
-        if user.id == user_id:
-            return user
+T = TypeVar("T")
+R = TypeVar("R")
+
+
+def safe_get(items: list[T], index: int) -> Optional[T]:
+    if 0 <= index <= len(items):
+        return items[index]
     return None
 
 
-user = get_user_by_id(999)
+def map_optional(value: Optional[T], transformer: Callable[[T], R]) -> Optional[R]:
+    if value is not None:
+        return transformer(value)
+    return None
+
+
+def or_else(value: Optional[T], default: T) -> T:
+    if value is not None:
+        return value
+    return default
