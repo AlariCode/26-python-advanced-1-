@@ -1,31 +1,16 @@
-# Нужно сделать Repository, который работает с любымим типами и имеет методы:
-# add - добавляет в список элемент
-# get_by_index - получает по index
-# get_all - получает все
 
-# Всё хранится как  list
+from typing import Generic, TypeVar
 
-from dataclasses import dataclass
-from typing import Generic, TypeVar, Optional
-
-T = TypeVar("T")
+Number = TypeVar("Number", int, float)
 
 
-@dataclass
-class Repository(Generic[T]):
-    items: list[T]
+class MyMath(Generic[Number]):
+    def max(self, a: Number, b: Number):
+        return a if a > b else b
 
-    def add(self, item: T):
-        self.items.append(item)
-
-    def det_by_index(self, index: int) -> Optional[T]:
-        if 0 <= index < len(self.items):
-            return self.items[index]
-        return None
-
-    def get_all(self) -> list[T]:
-        return self.items
+    def add(self, a: Number, b: Number):
+        return a + b
 
 
-repo = Repository[str](["a", "b"])
-print(repo.det_by_index(2))
+# math = MyMath[str]()
+math = MyMath[float]()
