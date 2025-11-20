@@ -1,40 +1,24 @@
-# Есть User, Product и Order у которых есть поле id.
-# Нужно сделать универвальную функицю поиска по id
+# def safe_div(a: float, b: float) -> Union[float, str]
 
-from dataclasses import dataclass
-from typing import Optional, Protocol, TypeVar
+from typing import TypeVar
 
 
-class Identifieble(Protocol):
-    id: int
+def safe_div(a: float, b: float) -> float | str:
+    if b == 0:
+        return "деление на 0"
+    return a / b
 
 
-T = TypeVar("T", bound=Identifieble)
+def safe_div2(a: float, b: float) -> float | None:
+    if b == 0:
+        return None
+    return a / b
 
 
-@dataclass
-class User:
-    id: int
-    email: str
+T = TypeVar("T")
 
 
-@dataclass
-class Product:
-    id: int
-    title: str
-
-
-@dataclass
-class Order:
-    id: int
-    producs: list[Product]
-
-
-def get_by_id(items: list[T], id_: int) -> Optional[T]:
-    for item in items:
-        if item.id == id_:
-            return item
-    return None
-
-
-get_by_id([User(1, "a@a.ru")], 1)
+def ensure_list(value: T | list[T]) -> list[T]:
+    if isinstance(value, list):
+        return value
+    return [value]
