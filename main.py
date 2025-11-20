@@ -1,24 +1,17 @@
-# def safe_div(a: float, b: float) -> Union[float, str]
 
-from typing import TypeVar
-
-
-def safe_div(a: float, b: float) -> float | str:
-    if b == 0:
-        return "деление на 0"
-    return a / b
+from typing import TypeGuard
 
 
-def safe_div2(a: float, b: float) -> float | None:
-    if b == 0:
-        return None
-    return a / b
+def is_int_list(x: list[int] | list[str]) -> TypeGuard[list[int]]:
+    return all(isinstance(i, int) for i in x)
 
 
-T = TypeVar("T")
+def is_str_list(x: list[int] | list[str]) -> TypeGuard[list[str]]:
+    return all(isinstance(i, str) for i in x)
 
 
-def ensure_list(value: T | list[T]) -> list[T]:
-    if isinstance(value, list):
-        return value
-    return [value]
+def f(xs: list[int] | list[str]):
+    if is_int_list(xs):
+        xs[0].is_integer()
+    if is_str_list(xs):
+        xs[0].capitalize()
