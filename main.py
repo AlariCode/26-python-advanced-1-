@@ -1,43 +1,12 @@
-# Есть 3 типа событий:
-# ClickEvent - x, y
-# KeyEvent - key
-# ResizeEvent - width, height
-
-# Нужно сделать функцию:
-# def handle_event(ev: ClickEvent | KeyEvent | ResizeEvent) -> str:
-# выводит строку с параметрами события
-
-from dataclasses import dataclass
+import asyncio
 
 
-@dataclass
-class ClickEvent:
-    x: int
-    y: int
+async def get_message():
+    return "привет"
 
 
-@dataclass
-class KeyEvent:
-    key: str
+async def main():
+    result = await asyncio.create_task(get_message())
+    print(result)
 
-
-@dataclass
-class ResizeEvent:
-    width: int
-    height: int
-
-
-def handle_event(ev: ClickEvent | KeyEvent | ResizeEvent) -> str:
-    match ev:
-        case ClickEvent(x=x, y=y):
-            return f"Click at {x}, {y}"
-        case KeyEvent(key=k):
-            return f"Pressed {k}"
-        case ResizeEvent(width=w, height=h):
-            return f"Resized {w} x {h}"
-    raise ValueError("Неизвестное событие")
-
-
-print(handle_event(ClickEvent(1, 10)))
-print(handle_event(KeyEvent("Enter")))
-print(handle_event(ResizeEvent(1920, 1080)))
+asyncio.run(main())
