@@ -1,17 +1,43 @@
+# Есть 3 типа событий:
+# ClickEvent - x, y
+# KeyEvent - key
+# ResizeEvent - width, height
 
-from typing import TypeGuard
+# Нужно сделать функцию:
+# def handle_event(ev: ClickEvent | KeyEvent | ResizeEvent) -> str:
+# выводит строку с параметрами события
+
+from dataclasses import dataclass
 
 
-def is_int_list(x: list[int] | list[str]) -> TypeGuard[list[int]]:
-    return all(isinstance(i, int) for i in x)
+@dataclass
+class ClickEvent:
+    x: int
+    y: int
 
 
-def is_str_list(x: list[int] | list[str]) -> TypeGuard[list[str]]:
-    return all(isinstance(i, str) for i in x)
+@dataclass
+class KeyEvent:
+    key: str
 
 
-def f(xs: list[int] | list[str]):
-    if is_int_list(xs):
-        xs[0].is_integer()
-    if is_str_list(xs):
-        xs[0].capitalize()
+@dataclass
+class ResizeEvent:
+    width: int
+    height: int
+
+
+def handle_event(ev: ClickEvent | KeyEvent | ResizeEvent) -> str:
+    match ev:
+        case ClickEvent(x=x, y=y):
+            return f"Click at {x}, {y}"
+        case KeyEvent(key=k):
+            return f"Pressed {k}"
+        case ResizeEvent(width=w, height=h):
+            return f"Resized {w} x {h}"
+    raise ValueError("Неизвестное событие")
+
+
+print(handle_event(ClickEvent(1, 10)))
+print(handle_event(KeyEvent("Enter")))
+print(handle_event(ResizeEvent(1920, 1080)))
