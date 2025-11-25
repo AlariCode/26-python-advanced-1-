@@ -1,13 +1,16 @@
 import asyncio
 import aiohttp
 
+# Получение в задачам параллельно 10 раз обращение к google
+
 
 async def main():
-    # res = requests.get("https://google.com", timeout=10)
-    # print(res.status_code)
+    urls = ["https://google.com"] * 20
     async with aiohttp.ClientSession() as session:
-        res = await session.get("https://google.com")
-        print(res.status)
-
+        tasks = [
+            session.get(url) for url in urls
+        ]
+        results = await asyncio.gather(*tasks)
+        print(list(map(lambda x: x.status, results)))
 
 asyncio.run(main())
