@@ -1,18 +1,13 @@
 import asyncio
-import time
-
-
-async def fetch():
-    await asyncio.sleep(2)  # получить данные
-    return 'done'
+import aiohttp
 
 
 async def main():
-    tasks = [fetch() for _ in range(100)]
-    results = await asyncio.gather(*tasks)
-    print(results)
-    # for _ in range(3):
-    #     print(fetch())
+    # res = requests.get("https://google.com", timeout=10)
+    # print(res.status_code)
+    async with aiohttp.ClientSession() as session:
+        res = await session.get("https://google.com")
+        print(res.status)
 
 
 asyncio.run(main())
