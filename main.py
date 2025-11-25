@@ -1,21 +1,23 @@
 import asyncio
-import aiohttp
-
-# Получение в задачам параллельно 10 раз обращение к google
 
 
-async def fetch(session, url):
-    return await asyncio.wait_for(session.get(url), timeout=2)
+async def good():
+    print("Начата")
+    return 1
+
+
+async def bad():
+    print("Начата")
+    raise ValueError("Error")
+    # return 1
 
 
 async def main():
-    urls = ["https://google.com"] * 10
-    async with aiohttp.ClientSession() as session:
-        tasks = [
-            asyncio.create_task(fetch(session, url)) for url in urls
-        ]
-        done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-        results = [task.result() for task in done]
-        print(list(map(lambda x: x.status, results)))
+    try:
+        result = await asyncio.gather(bad(), good(), return_exceptions=True)
+        print(result)
+    except ValueError as e:
+        print(e)
+
 
 asyncio.run(main())
