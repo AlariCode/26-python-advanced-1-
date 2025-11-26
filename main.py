@@ -1,23 +1,20 @@
 import asyncio
 
 
-async def good():
-    print("Начата")
-    return 1
-
-
-async def bad():
-    print("Начата")
-    raise ValueError("Error")
-    # return 1
+async def job():
+    print("Работаю")
+    await asyncio.sleep(5)
+    print("Готово!")
 
 
 async def main():
+    task = asyncio.create_task(job())
+    await asyncio.sleep(1)
+    task.cancel()
     try:
-        result = await asyncio.gather(bad(), good(), return_exceptions=True)
-        print(result)
-    except ValueError as e:
-        print(e)
-
+        await task
+    except asyncio.CancelledError:
+        print(task.cancelled())
+        print("Задача отменена")
 
 asyncio.run(main())
