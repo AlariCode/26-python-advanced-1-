@@ -1,38 +1,35 @@
 import asyncio
+import random
 
 
-async def save():
-    print("Сохраняю")
-    await asyncio.sleep(2)
-    print("Сохранено")
-    raise ValueError("e")
-    return 1
+async def unstable():
+    await asyncio.sleep(0.2)
+    if random.random() < 0.5:
+        raise ValueError("Случайная ошибка")
+    return "OK"
 
 
-async def job():
-    print("Работаю")
-    t = save()
-    # t = asyncio.create_task(save())
-    # await t
-    try:
-        res = await t
-        print(res)
-    except ValueError:
-        print("Error")
-    await asyncio.sleep(5)
-    print("Готово!")
+async def run_with_retry(job, max_retries=3):
+    for attempt in range(1, max_retries + 1):
+        task = asyncio.create_task(job())
+
+        try:
+            result = await task
+            print(f"Попытка {attempt}: успех -> {result}")
+            return result
+        except Exception as e:
+            print(f"Попытка {attempt}: ошибка -> {e}")
+
+            if attempt == max_retries:
+                print("Все попытки исчерпаны")
+                return "ERROR"
+            await asyncio.sleep(0.5)
 
 
 async def main():
-    task = asyncio.create_task(job())
-    await asyncio.sleep(1)
-    # task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
-        print(task.cancelled())
-        print("Задача отменена")
-    await asyncio.sleep(4)
-
+    # run_with_retry - сделать корутингу, которая запустит корутину
+    # если она выбросила ошибку, пробует заново до указанного лимита
+    result = await run_with_retry(unstable)
+    print(f"Итог: {result}")
 
 asyncio.run(main())
