@@ -5,9 +5,9 @@ description = ""
 authors = [
     {name = "Alaricode",email = "antonlarichev@gmail.com"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4.0"
 dependencies = [
-    "requests (>=2.32.5,<3.0.0)"
+    "textual (>=6.6.0,<7.0.0)"
 ]
 
 [tool.poetry]
