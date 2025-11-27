@@ -1,6 +1,23 @@
 [project]
-name = "note-app"
-version = "0.0.1"
-description = "Проект заметок"
+name = "noteapp"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Alaricode",email = "antonlarichev@gmail.com"}
+]
 requires-python = ">=3.10"
-dependencies = ["requests"]
+dependencies = [
+    "requests (>=2.32.5,<3.0.0)"
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.0.1,<10.0.0)"
+]
