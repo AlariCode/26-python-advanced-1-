@@ -1,4 +1,3 @@
-from typing import Type
 from textual.app import App
 
 from .config import AppSettings

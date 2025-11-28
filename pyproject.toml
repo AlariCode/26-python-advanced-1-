@@ -16,8 +16,10 @@ build-backend = "poetry.core.masonry.api"
 
 [dependency-groups]
 dev = [
-    "pytest (>=9.0.1,<10.0.0)"
+    "pytest (>=9.0.1,<10.0.0)",
+    "ruff (>=0.14.6,<0.15.0)"
 ]
 
 [tool.poetry.scripts]
 app = "note_app.cli:run"
+lint = "scripts.lint:run"
