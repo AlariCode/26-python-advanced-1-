@@ -1,7 +1,9 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Header, Footer, Tree, Markdown
+from textual.widgets import Header, Footer, Tree
 from textual.containers import Horizontal
+
+from note_app.widgets import MardownWidget
 
 
 class MainScreen(Screen):
@@ -19,11 +21,12 @@ class MainScreen(Screen):
         yield Header()
         with Horizontal():
             yield Tree(label="Моя база знаний", id="tree")
-            yield Markdown("# Привет! Я загловок")
+            yield MardownWidget()
         yield Footer()
 
     def on_mount(self):
         self.title = "Менеджер заметок"
+        self.query_one(MardownWidget).text = "## Привет"
 
     def action_quit(self):
         self.app.exit()
