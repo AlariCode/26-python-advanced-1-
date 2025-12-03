@@ -1,22 +1,30 @@
-from abc import ABC, abstractmethod
 from pathlib import Path
 
-from note_app.domain import Folder
+from note_app.domain.folder import Folder
+from note_app.repositories.base_folder_repository import BaseFolderRepository
 
 
-class BaseFolderRepository(ABC):
-    @abstractmethod
-    def get_all_folders(self) -> list[Folder]:
-        pass
+class FolderRepository(BaseFolderRepository):
+    def __init__(self, base_path: Path) -> None:
+        self.base_path = base_path.resolve()
 
-    @abstractmethod
-    def get_folder_by_path(self, path: Path) -> Folder:
-        pass
+    def get_folders_by_path(self, path: Path) -> list[Folder]:
+        path = path.resolve()
 
-    @abstractmethod
-    def create_folder(self, name: str) -> Folder:
-        pass
+        if not path.exists() or not path.is_dir():
+            raise ValueError(f"Folder doen't exist: {path}")
 
-    @abstractmethod
-    def delete_folder(self, folder: Folder) -> None:
-        pass
+        if self.base_path not in path.parents and path != self.base_path:
+            raise ValueError("Access outside data directory in not allowed")
+
+        folders: list[Folder] = []
+
+        for sub_path in path.iterdir():
+            if sub_path.is_dir() and not sub_path.name.startswith("."):
+                folders.append(
+                    Folder(
+                        name=sub_path.name,
+                        path=sub_path
+                    )
+                )
+        return sorted(folders, key=lambda f: f.name)
