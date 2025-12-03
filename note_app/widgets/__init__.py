@@ -1,3 +1,4 @@
-from .markdown import MardownWidget
+from .note_view import NoteViewWidget
+from .file_tree import FileTreeWidget
 
-__all__ = ["MardownWidget"]
+__all__ = ["NoteViewWidget", "FileTreeWidget"]

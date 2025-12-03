@@ -4,7 +4,7 @@ from textual.widgets import Markdown
 from textual.reactive import reactive
 
 
-class MardownWidget(VerticalScroll):
+class NoteViewWidget(VerticalScroll):
     text = reactive("")
 
     def compose(self) -> ComposeResult:
