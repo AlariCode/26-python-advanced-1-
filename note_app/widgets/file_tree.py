@@ -5,7 +5,6 @@ from textual.widgets import Tree
 from textual.widgets._tree import TreeNode
 from textual.message import Message
 
-from note_app.domain import Folder
 from note_app.repositories import BaseFolderRepository, BaseNoteRepository
 
 

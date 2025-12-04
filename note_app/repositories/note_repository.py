@@ -64,3 +64,12 @@ class NoteRepository(BaseNoteRepository):
             path.rename(new_path)
             return Note(new_name, new_path)
         return note
+
+    def load_note(self, path: Path) -> Note:
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+            return Note(
+                path.name,
+                path,
+                content
+            )
