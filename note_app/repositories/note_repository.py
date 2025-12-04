@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 from note_app.domain import Note
 from note_app.repositories.base_note_repository import BaseNoteRepository
 
@@ -34,7 +35,7 @@ class NoteRepository(BaseNoteRepository):
         return sorted(notes, key=lambda f: f.name)
 
     def create_note(self, path: Path, name: str) -> Note:
-        """Создание директории"""
+        """Создание заметок"""
         self._check_path(path)
 
         if not name or "/" in name or "\\" in name:
@@ -44,7 +45,22 @@ class NoteRepository(BaseNoteRepository):
         return Note(name, path)
 
     def delete_note(self, note: Note) -> None:
-        """Удаление директории"""
+        """Удаление заметки"""
         path = note.path.resolve()
         self._check_path(path)
         path.unlink()
+
+    def update_note(self, note: Note, content: str, new_name: Optional[str] = None) -> Note:
+        """Обновление заметки"""
+        path = note.path.resolve()
+        self._check_path(path)
+
+        path.write_text(content, encoding="utf-8")
+
+        if new_name and new_name != note.name:
+            if "/" in new_name or "\\" in new_name:
+                raise ValueError("Invalid Note Name")
+            new_path = path.parent / f"{new_name}.md"
+            path.rename(new_path)
+            return Note(new_name, new_path)
+        return note
