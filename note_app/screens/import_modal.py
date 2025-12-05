@@ -1,3 +1,4 @@
+import httpx
 from textual.screen import ModalScreen
 from textual.containers import Container, Horizontal
 from textual.widgets import Static, Input, Button
@@ -22,21 +23,30 @@ class ImportModal(ModalScreen[str]):
     def compose(self):
         with Container(id="dialog"):
             yield Static("Импорт данных", id="title")
-            yield Input(placeholder="Введите url для импорта", id="input-url")
+            yield Input(placeholder="Введите url для импорта", id="imput-url")
             with Horizontal(id="buttons"):
                 yield Button("Импортировать", variant="primary", id="import-btn")
                 yield Button("Отмена", id="cencel-btn")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "import-btn":
-            url_input = self.query_one("#input-url", Input)
+            url_input = self.query_one("#imput-url", Input)
             url = url_input.value.strip()
             if url:
-                pass
+                self.app.call_later(self.import_data, url)
             else:
                 url_input.styles.border = ("solid", "red")
         else:
             self.dismiss(None)
 
     async def import_data(self, url: str) -> None:
-        pass
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.get(url)
+                response.raise_for_status()
+                data = response.text
+                self.dismiss(data)
+        except httpx.HTTPError as e:
+            self.app.notify(f"Ошибка загрузки: {e}", severity="error")
+        except Exception as e:
+            self.app.notify(f"Неизвестная ошибка: {e}", severity="error")

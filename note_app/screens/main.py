@@ -1,3 +1,4 @@
+from typing import Optional
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Header, Footer
@@ -44,8 +45,9 @@ class MainScreen(Screen):
     def action_quit(self):
         self.app.exit()
 
-    def handle_import(self, data):
-        pass
+    def handle_import(self, data: Optional[str]):
+        if data:
+            self.app.notify(data)
 
     def on_file_tree_widget_note_selected(self, message: FileTreeWidget.NoteSelected) -> None:
         note = self._note_repo.load_note(message.note_path)
