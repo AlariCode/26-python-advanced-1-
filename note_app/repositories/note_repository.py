@@ -48,7 +48,6 @@ class NoteRepository(BaseNoteRepository):
     def delete_note(self, note: Note) -> None:
         """Удаление заметки"""
         path = note.path.resolve()
-        self._check_path(path)
         path.unlink()
 
     def update_note(self, note: Note, content: str, new_name: Optional[str] = None) -> Note:
