@@ -34,14 +34,15 @@ class NoteRepository(BaseNoteRepository):
                 )
         return sorted(notes, key=lambda f: f.name)
 
-    def create_note(self, path: Path, name: str) -> Note:
+    def create_note(self, path: Path, name: str, content: str) -> Note:
         """Создание заметок"""
         self._check_path(path)
 
         if not name or "/" in name or "\\" in name:
             raise ValueError("Invalid note name")
 
-        path.mkdir(parents=True, exist_ok=False)
+        new_path = path / f"{name}.md"
+        new_path.write_text(content, encoding="utf-8")
         return Note(name, path)
 
     def delete_note(self, note: Note) -> None:
